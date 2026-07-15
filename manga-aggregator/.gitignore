@@ -1,0 +1,13 @@
+node_modules/
+*.log
+.env
+database/*.db
+database/backups/
+public/images/covers/*.jpg
+public/images/covers/*.png
+public/images/covers/*.webp
+.DS_Store
+.vscode/
+.idea/
+coverage/
+.nyc_output/
