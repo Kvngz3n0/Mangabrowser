@@ -1,0 +1,17 @@
+services:
+  - type: web
+      name: manga-aggregator
+          runtime: node
+              plan: free
+                  buildCommand: npm install
+                      startCommand: node server.js
+                          envVars:
+                                - key: NODE_ENV
+                                        value: production
+                                              - key: PORT
+                                                      value: 10000
+                                                          disk:
+                                                                name: manga-data
+                                                                      mountPath: /opt/render/project/src/database
+                                                                            sizeGB: 1
+                                                                            
