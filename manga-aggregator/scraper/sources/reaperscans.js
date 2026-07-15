@@ -1,16 +1,16 @@
-const BaseScraper = require('../base');
+const BaseScraper = require('../../../base');
 
-class AsuraScansScraper extends BaseScraper {
+class ReaperScansScraper extends BaseScraper {
   constructor() {
-    super('AsuraScans', 'https://asuracomic.net', {
+    super('ReaperScans', 'https://reaperscans.com', {
       timeout: 15000,
       retries: 3,
       headers: {
-        'Referer': 'https://asuracomic.net/',
+        'Referer': 'https://reaperscans.com/',
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
       }
     });
-    this.baseUrl = 'https://asuracomic.net';
+    this.baseUrl = 'https://reaperscans.com';
   }
 
   // ─── 1. SEARCH ───
@@ -138,4 +138,4 @@ class AsuraScansScraper extends BaseScraper {
   }
 }
 
-module.exports = AsuraScansScraper;
+module.exports = ReaperScansScraper;

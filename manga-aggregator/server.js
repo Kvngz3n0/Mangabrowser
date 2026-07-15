@@ -3,6 +3,7 @@ const cors = require('cors');
 const compression = require('compression');
 const helmet = require('helmet');
 const path = require('path');
+const axios = require('axios');
 const Database = require('./database/db');
 const ScraperEngine = require('./scraper/engine');
 const { registerAllScrapers } = require('./scraper/sources');
@@ -17,7 +18,7 @@ app.use(cors());
 app.use(compression());
 app.use(express.json());
 
-// DEBUG & SEED ENDPOINTS (must be before static)
+// ===== DEBUG & SEED ENDPOINTS (before static) =====
 app.get('/api/debug/sources', (req, res) => {
   res.json({ count: engine.scrapers.size, sources: Array.from(engine.scrapers.keys()) });
 });
@@ -42,7 +43,7 @@ app.get('/api/seed', async (req, res) => {
         title: "One Punch Man",
         altTitles: ["ワンパンマン"],
         description: "The story of Saitama, a hero who can defeat any enemy with a single punch.",
-        cover: "https://mangadex.org/covers/...",
+        cover: "https://uploads.mangadex.org/covers/...",
         author: "ONE",
         artist: "Yusuke Murata",
         genres: ["Action", "Comedy", "Superhero"],
@@ -135,10 +136,36 @@ app.get('/api/seed', async (req, res) => {
   }
 });
 
-// Static files AFTER API routes
+// ===== IMAGE PROXY (bypass CORS/referer blocks) =====
+app.get('/api/proxy-image', async (req, res) => {
+  try {
+    const { url } = req.query;
+    if (!url) return res.status(400).send('URL required');
+
+    const response = await axios.get(url, {
+      responseType: 'stream',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        'Referer': 'https://mangadex.org/',
+        'Accept': 'image/webp,image/apng,image/*,*/*;q=0.8'
+      },
+      timeout: 15000,
+      maxRedirects: 5
+    });
+
+    res.setHeader('Content-Type', response.headers['content-type'] || 'image/jpeg');
+    res.setHeader('Cache-Control', 'public, max-age=86400');
+    response.data.pipe(res);
+  } catch (err) {
+    console.error('Image proxy error:', err.message);
+    res.status(500).send('Image fetch failed');
+  }
+});
+
+// ===== STATIC FILES (after API routes) =====
 app.use(express.static(path.join(__dirname, 'public')));
 
-// API Routes
+// ===== API ROUTES =====
 app.get('/api/search', async (req, res) => {
   try {
     const { q } = req.query;

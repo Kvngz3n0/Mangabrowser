@@ -6,6 +6,11 @@ const ComicKScraper = require('./comick');
 const AsuraScansScraper = require('./asurascans');
 const WebtoonScraper = require('./webtoon');
 const MangaPlusScraper = require('./mangaplus');
+const mangaparkScraper = require('./mangapark');
+const mangafoxScraper = require('./mangafox');
+const mangakakalotScraper = require('./mangakakalot');
+const mangahereScraper = require('./mangahere');
+const ReaperScansScraper = require('./reaperscans');
 const TemplateScraper = require('./template');
 
 function registerAllScrapers(engine) {
@@ -17,7 +22,11 @@ function registerAllScrapers(engine) {
   engine.register('AsuraScans', new AsuraScansScraper());
   engine.register('Webtoon', new WebtoonScraper());
   engine.register('MangaPlus', new MangaPlusScraper());
-
+  engine.register('MangaPark', new mangaparkScraper());
+  engine.register('MangaFox', new mangafoxScraper());
+  engine.register('MangaHere', new mangahereScraper());
+  engine.register('MangaKakalot', new mangakakalotScraper());
+  engine.register('ReaperScans', new ReaperScansScraper());
   const additionalSources = [
     { name: 'FlameScans', url: 'https://flamecomics.com', type: 'manhwa' },
     { name: 'ReaperScans', url: 'https://reaperscans.com', type: 'manhwa' },
